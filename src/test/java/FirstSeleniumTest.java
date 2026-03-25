@@ -25,6 +25,7 @@ public class FirstSeleniumTest {
         driver.get("https://www.google.com");
         String title = driver.getTitle();
         System.out.println("Title của trang là: " + title);
+        System.out.println("Jenkins dang tu dong chay bài test nay!");
 
         // Kiểm tra xem tiêu đề có chứa chữ Google không
         Assert.assertTrue(title.contains("Google"), "Tiêu đề không khớp!");
