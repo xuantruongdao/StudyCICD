@@ -13,7 +13,7 @@ public class FirstSeleniumTest extends BaseTest {
 
         // Lấy tiêu đề trang và kiểm tra (Assert)
         String title = driver.getTitle();
-        System.out.println("Tiêu đề trang là: " + title);
+        System.out.println("Tieu de trang là : " + title);
 
         Assert.assertTrue(title.contains("Google"), "Tiêu đề không khớp!");
     }
