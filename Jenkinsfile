@@ -1,15 +1,25 @@
 pipeline {
     agent any
+
     parameters {
-        choice(name: 'CHOOSE_BROWSER', choices: ['chrome', 'firefox'], description: 'Chọn trình duyệt')
-        booleanParam(name: 'RUN_HEADLESS', defaultValue: true, description: 'Chạy chế độ ẩn danh')
+        // Cho phép chọn bộ test (testng.xml, smoke.xml, vầy...)
+        booleanParam(name: 'RUN_HEADLESS', defaultValue: true, description: 'Chạy chế độ ẩn danh (Headless)')
     }
+
     stages {
-        // Đã xóa stage Checkout thừa vì Jenkins tự làm lúc đầu rồi
-        stage('Build & Test') {
-            steps {
-                // Chạy lệnh Maven
-                bat "mvn clean test -DBROWSER=${params.CHOOSE_BROWSER} -DHEADLESS=${params.RUN_HEADLESS}"
+        stage('Testing Parallel') {
+            parallel {
+                stage('Run on Chrome') {
+                    steps {
+                        bat "mvn clean test -DBROWSER=chrome -DHEADLESS=${params.RUN_HEADLESS} -DsuiteXmlFile=${params.TEST_SUITE}"
+                    }
+                }
+                stage('Run on Firefox') {
+                    steps {
+                        // Đảm bảo máy Jenkins đã cài Firefox
+                        bat "mvn clean test -DBROWSER=firefox -DHEADLESS=${params.RUN_HEADLESS} -DsuiteXmlFile=${params.TEST_SUITE}"
+                    }
+                }
             }
         }
     }
