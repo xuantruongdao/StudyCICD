@@ -1,30 +1,22 @@
 pipeline {
     agent any
-
     parameters {
-        choice(name: 'CHOOSE_BROWSER', choices: ['chrome', 'firefox'], description: 'Chọn trình duyệt để test')
-        booleanParam(name: 'RUN_HEADLESS', defaultValue: true, description: 'Chạy chế độ ẩn danh (Headless)')
+        choice(name: 'CHOOSE_BROWSER', choices: ['chrome', 'firefox'], description: 'Chọn trình duyệt')
+        booleanParam(name: 'RUN_HEADLESS', defaultValue: true, description: 'Chạy chế độ ẩn danh')
     }
-
     stages {
-        stage('Checkout Code') {
-            steps {
-                checkout scm
-            }
-        }
-
+        // Đã xóa stage Checkout thừa vì Jenkins tự làm lúc đầu rồi
         stage('Build & Test') {
             steps {
-                // Chạy lệnh Maven với các tham số đã chọn
+                // Chạy lệnh Maven
                 bat "mvn clean test -DBROWSER=${params.CHOOSE_BROWSER} -DHEADLESS=${params.RUN_HEADLESS}"
             }
         }
     }
-
     post {
         always {
-            // Luôn tạo báo cáo Allure sau khi test xong
-            allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+            // Sửa đường dẫn results thành 'target/allure-results'
+            allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
         }
     }
 }

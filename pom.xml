@@ -9,10 +9,17 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <propertie>
+            <maven.compiler.source>21</maven.compiler.source>
+            <maven.compiler.target>21</maven.compiler.target>
+            <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        </propertie>
+        <propertie>
+            <aspectj.version>1.9.20.1</aspectj.version>
+            <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+        </propertie>
     </properties>
+
 
     <dependencies>
         <dependency>
