@@ -28,10 +28,10 @@ pipeline {
                 }
             }
         }
-        post {
-            always {
-                // Quét thư mục mẹ để gộp cả chrome và firefox vào 1 report
-                allure includeProperties: false, jdk: '', results: [[path: '**/target/allure-results']]
-            }
+    post {
+         always {
+                        // Sửa đường dẫn để quét đúng vào thư mục mẹ nơi chứa 2 thư mục con chrome/firefox
+                        allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
         }
+    }
 }
