@@ -38,10 +38,10 @@ public class BaseTest {
             cOptions.addArguments("--remote-allow-origins=*");
             driver = new ChromeDriver(cOptions);
         }
+        driver.manage().window().maximize();
         io.qameta.allure.Allure.getLifecycle().updateTestCase(result -> {
             result.setName(result.getName() + " [" + browser.toUpperCase() + "]");
         });
-        driver.manage().window().maximize();
     }
 
     @AfterMethod
