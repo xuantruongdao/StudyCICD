@@ -2,11 +2,13 @@ package org.example;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
 
 public class LoginPage {
     WebDriver driver;
 
-    // Các thành phần (Locators) trên trang Login
     By usernameField = By.id("username");
     By passwordField = By.id("password");
     By loginButton = By.cssSelector("button[type='submit']");
@@ -23,6 +25,8 @@ public class LoginPage {
     }
 
     public String getResultMessage() {
-        return driver.findElement(successMessage).getText();
+        // Thêm Explicit Wait: Đợi tối đa 10 giây cho đến khi thông báo xuất hiện
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(successMessage)).getText();
     }
 }

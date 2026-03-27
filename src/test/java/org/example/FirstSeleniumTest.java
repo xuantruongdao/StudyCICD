@@ -1,43 +1,20 @@
 package org.example;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-public class FirstSeleniumTest {
-    WebDriver driver;
-
-    @BeforeMethod
-    public void setup() {
-        // Cấu hình để chạy được trên Jenkins (Headless Mode)
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless=new"); // Chạy ngầm, không mở cửa sổ trình duyệt
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-
-        driver = new ChromeDriver(options);
-    }
+// 1. Kế thừa từ BaseTest để dùng chung cấu hình Driver
+public class FirstSeleniumTest extends BaseTest {
 
     @Test
-    public void checkGoogleTitle() {
+    public void testGoogleSearch() {
+        // 2. Sử dụng biến 'driver' đã được khởi tạo sẵn ở BaseTest
         driver.get("https://www.google.com");
+
+        // Lấy tiêu đề trang và kiểm tra (Assert)
         String title = driver.getTitle();
-        System.out.println("Title cua trang là: " + title);
-        System.out.println("Jenkins dang tu dong chay bai test nay!");
-        System.out.println("Jenkins dang tu dong chay bai test nay hahaha!");
+        System.out.println("Tiêu đề trang là: " + title);
 
-        // Kiểm tra xem tiêu đề có chứa chữ Google không
         Assert.assertTrue(title.contains("Google"), "Tiêu đề không khớp!");
-    }
-
-    @AfterMethod
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
     }
 }
