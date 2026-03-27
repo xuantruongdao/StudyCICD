@@ -16,7 +16,7 @@ pipeline {
     post {
         always {
             // Sửa đường dẫn results thành 'target/allure-results'
-            allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
+            allure includeProperties: false, jdk: '', results: [[path: '**/target/allure-results']]
         }
     }
 }
