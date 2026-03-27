@@ -7,6 +7,10 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 
 public class LoginTest {
     WebDriver driver;
@@ -22,28 +26,31 @@ public class LoginTest {
 //    }
     @BeforeMethod
     public void setup() {
-        ChromeOptions options = new ChromeOptions();
-
-        // Đọc biến môi trường "HEADLESS" từ hệ thống
-        // Nếu không tìm thấy biến này, mặc định sẽ là "false" (chạy có UI)
+        // 1. Đọc biến BROWSER và HEADLESS
+        String browser = System.getProperty("BROWSER", "chrome"); // Mặc định là chrome
         String headlessMode = System.getProperty("HEADLESS", "false");
 
-        if (headlessMode.equalsIgnoreCase("true")) {
-            options.addArguments("--headless=new");
-            System.out.println("--- Đang chạy ở chế độ HEADLESS (Jenkins) ---");
+        // 2. Khởi tạo Driver dựa trên lựa chọn
+        if (browser.equalsIgnoreCase("firefox")) {
+            FirefoxOptions fOptions = new FirefoxOptions();
+            if (headlessMode.equalsIgnoreCase("true")) fOptions.addArguments("-headless");
+            driver = new FirefoxDriver(fOptions);
+        } else if (browser.equalsIgnoreCase("edge")) {
+            EdgeOptions eOptions = new EdgeOptions();
+            if (headlessMode.equalsIgnoreCase("true")) eOptions.addArguments("--headless=new");
+            driver = new EdgeDriver(eOptions);
         } else {
-            System.out.println("--- Đang chạy ở chế độ UI (Local) ---");
+            // Mặc định chạy Chrome
+            ChromeOptions cOptions = new ChromeOptions();
+            if (headlessMode.equalsIgnoreCase("true")) cOptions.addArguments("--headless=new");
+            cOptions.addArguments("--remote-allow-origins=*");
+            driver = new ChromeDriver(cOptions);
         }
 
-        options.addArguments("--remote-allow-origins=*");
-        driver = new ChromeDriver(options);
         driver.manage().window().maximize();
-
         driver.get("https://the-internet.herokuapp.com/login");
         loginPage = new LoginPage(driver);
     }
-
-
     @Test
     public void testSuccessfulLogin() {
         loginPage.login("tomsmith", "SuperSecretPassword!");
