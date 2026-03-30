@@ -4,7 +4,7 @@
     <test name="UI Tests">
         <classes>
             <class name="org.example.FirstSeleniumTest"/>
-            <class name="org.example.LoginTest"/>
+            <class name="Firewall.HomePageTest"/>
         </classes>
     </test>
 </suite>
