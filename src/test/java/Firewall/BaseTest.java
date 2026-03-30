@@ -9,12 +9,13 @@ import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import java.time.Duration;
 
 public class BaseTest {
     protected WebDriver driver;
-
+    protected String browserName;
     // Chuyển từ @BeforeMethod sang @BeforeTest để chạy 1 lần cho cả chu trình
     @BeforeTest
     public void setup() {
@@ -52,10 +53,13 @@ public class BaseTest {
 
         // --- BƯỚC ĐĂNG NHẬP CHUNG CHO CẢ CHU TRÌNH ---
         loginToFirewall();
-
-        // Giữ lại phần đổi tên cho Allure
+    }
+    @BeforeMethod
+    public void updateAllureName() {
+        // Lúc này browserName đã có giá trị và không còn bị báo đỏ nữa
         io.qameta.allure.Allure.getLifecycle().updateTestCase(result -> {
-            result.setName(result.getName() + " [" + browser.toUpperCase() + "]");
+            result.setName(result.getName() + " [" + browserName.toUpperCase() + "]");
+            result.setHistoryId(result.getHistoryId() + "-" + browserName.toUpperCase());
         });
     }
 
