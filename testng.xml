@@ -3,7 +3,6 @@
 <suite name="Full Regression Suite">
     <test name="UI Tests">
         <classes>
-            <class name="org.example.FirstSeleniumTest"/>
             <class name="Firewall.HomePageTest"/>
         </classes>
     </test>
