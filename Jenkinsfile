@@ -7,35 +7,25 @@ pipeline {
         booleanParam(name: 'RUN_HEADLESS', defaultValue: true, description: 'Chạy chế độ ẩn danh (Headless)')
     }
 
-    stages {
-            stage('Prepare') {
-                steps { bat "mvn clean" }
+    stage('Testing Parallel') {
+        parallel {
+            stage('Run on Chrome') {
+                steps {
+                    // Thêm -Dallure.results.directory để tách folder
+                    bat "mvn test -DBROWSER=chrome -Dallure.results.directory=target/allure-results/chrome -DsuiteXmlFile=testng.xml"
+                }
             }
-            stage('Testing Parallel') {
-                parallel {
-                    stage('Run on Chrome') {
-                        steps {
-                            // Thêm -Dallure.results.directory để tách thư mục
-                            bat "mvn test -DBROWSER=chrome -Dallure.results.directory=target/allure-results/chrome -DsuiteXmlFile=testng.xml"
-                        }
-                    }
-                    stage('Run on Firefox') {
-                        steps {
-                            // Thêm -Dallure.results.directory để tách thư mục
-                            bat "mvn test -DBROWSER=firefox -Dallure.results.directory=target/allure-results/firefox -DsuiteXmlFile=testng.xml"
-                        }
-                    }
+            stage('Run on Firefox') {
+                steps {
+                    // Thêm -Dallure.results.directory để tách folder
+                    bat "mvn test -DBROWSER=firefox -Dallure.results.directory=target/allure-results/firefox -DsuiteXmlFile=testng.xml"
                 }
             }
         }
+    }
     post {
         always {
-            // Cách 1: Chỉ định rõ 2 folder kết quả (Chắc chắn nhất)
-            allure includeProperties: false, jdk: '',
-            results: [
-                [path: 'target/allure-results/chrome'],
-                [path: 'target/allure-results/firefox']
-            ]
+            // QUAN TRỌNG: Chỉ định RÕ CẢ 2 ĐƯỜNG DẪN folder kết quả
+            allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results/chrome'], [path: 'target/allure-results/firefox']]
         }
     }
-}
