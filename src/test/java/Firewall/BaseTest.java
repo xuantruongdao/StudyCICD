@@ -19,19 +19,19 @@ public class BaseTest {
     // Chuyển từ @BeforeMethod sang @BeforeTest để chạy 1 lần cho cả chu trình
     @BeforeTest
     public void setup() {
-        String browser = System.getProperty("BROWSER", "chrome");
+        browserName = System.getProperty("BROWSER", "chrome");
         String headlessMode = System.getProperty("HEADLESS", "false");
 
-        System.out.println("--- Khởi tạo chu trình test trên: " + browser.toUpperCase() + " ---");
+        System.out.println("--- Khởi tạo chu trình test trên: " + browserName.toUpperCase() + " ---");
 
-        if (browser.equalsIgnoreCase("firefox")) {
+        if (browserName.equalsIgnoreCase("firefox")) {
             FirefoxOptions fOptions = new FirefoxOptions();
             if (headlessMode.equalsIgnoreCase("true")) fOptions.addArguments("-headless");
             // Vượt lỗi bảo mật HTTPS cho Firefox
             fOptions.setAcceptInsecureCerts(true);
             driver = new FirefoxDriver(fOptions);
 
-        } else if (browser.equalsIgnoreCase("edge")) {
+        } else if (browserName.equalsIgnoreCase("edge")) {
             EdgeOptions eOptions = new EdgeOptions();
             if (headlessMode.equalsIgnoreCase("true")) eOptions.addArguments("--headless=new");
             // Vượt lỗi bảo mật HTTPS cho Edge
@@ -62,6 +62,7 @@ public class BaseTest {
             result.setHistoryId(result.getHistoryId() + "-" + browserName.toUpperCase());
         });
     }
+
 
     private void loginToFirewall() {
         System.out.println("--- Đang thực hiện đăng nhập hệ thống ---");
