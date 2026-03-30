@@ -29,9 +29,13 @@ pipeline {
             }
         }
     post {
-         always {
-                        // Sửa đường dẫn để quét đúng vào thư mục mẹ nơi chứa 2 thư mục con chrome/firefox
-                        allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
+        always {
+            // Cách 1: Chỉ định rõ 2 folder kết quả (Chắc chắn nhất)
+            allure includeProperties: false, jdk: '',
+            results: [
+                [path: 'target/allure-results/chrome'],
+                [path: 'target/allure-results/firefox']
+            ]
         }
     }
 }
