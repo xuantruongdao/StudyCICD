@@ -67,7 +67,7 @@ public class BaseTest {
         try {
             driver.findElement(By.name("username")).sendKeys("truongdao");
             driver.findElement(By.name("password")).sendKeys("Testing@12345678");
-            driver.findElement(By.id("login-btn")).click();
+            driver.findElement(By.xpath("//button[contains(text(),'ĐĂNG NHẬP')]")).click();
         } catch (Exception e) {
             System.out.println("Lỗi đăng nhập hoặc đã ở trong hệ thống: " + e.getMessage());
         }
