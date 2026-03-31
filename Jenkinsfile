@@ -12,34 +12,33 @@ pipeline {
         }
         stage('Testing') {
             steps {
-                // Chỉ chạy Chrome và lưu vào folder kết quả cố định
-                bat "mvn test -DBROWSER=chrome -Dallure.results.directory=target/allure-results -DsuiteXmlFile=${params.TEST_SUITE} -DHEADLESS=${params.RUN_HEADLESS}"
+                // Chạy Chrome và ép Pipeline chạy tiếp dù test Fail (để còn gửi Telegram)
+                bat "mvn test -DBROWSER=chrome -Dallure.results.directory=target/allure-results -DsuiteXmlFile=${params.TEST_SUITE} -DHEADLESS=${params.RUN_HEADLESS} || exit 0"
             }
         }
     }
     post {
         always {
-            // Gom báo cáo Allure từ thư mục duy nhất
             allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
 
             script {
                 def botToken = "8235786325:AAH13T9nKHIiG7F59jHLyrclTntSLkTa5Hk"
                 def chatId = "8321594462"
                 def buildStatus = currentBuild.currentResult
-                def icon = (buildStatus == 'SUCCESS') ? "✅" : "❌"
 
-                // Chuỗi tin nhắn gọn gàng
-                def message = "${icon} *FIREWALL TEST: ${buildStatus}*\\n🔢 Build: #${env.BUILD_NUMBER}\\n🚀 Browser: CHROME\\n🔗 [Xem Báo Cáo](${env.BUILD_URL}allure/)"
+                // Dùng ký tự đơn giản để test kết nối trước
+                def statusIcon = (buildStatus == 'SUCCESS') ? "[OK]" : "[FAILED]"
+                def msg = "${statusIcon} KET QUA TEST FIREWALL\\nBuild: #${env.BUILD_NUMBER}\\nStatus: ${buildStatus}\\nLink: ${env.BUILD_URL}allure/"
 
                 powershell """
+                    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
                     \$url = "https://api.telegram.org/bot${botToken}/sendMessage"
                     \$payload = @{
                         chat_id = "${chatId}"
-                        text = "${message}"
+                        text = "${msg}"
                         parse_mode = "Markdown"
-                    } | ConvertTo-Json -Compress
-
-                    Invoke-RestMethod -Uri \$url -Method Post -Body \$payload -ContentType "application/json; charset=utf-8"
+                    }
+                    Invoke-RestMethod -Uri \$url -Method Post -Body (\$payload | ConvertTo-Json) -ContentType "application/json; charset=utf-8"
                 """
             }
         }
