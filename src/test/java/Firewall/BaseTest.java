@@ -70,9 +70,9 @@ public class BaseTest {
 
         // Điền thông tin login (Thay ID/Name đúng với FW của bạn)
         try {
-            driver.findElement(By.xpath("//input[@placeholder='Nhập tên đăng nhập' or @placeholder='Username' or @placeholder='User name' or @name='username' or @id='username']")).sendKeys("truongdao");
-            driver.findElement(By.xpath("//input[@placeholder='Nhập mật khẩu' or @placeholder='Password' or @name='password' or @type='password']")).sendKeys("Testing@12345678");
-            driver.findElement(By.xpath("//button[contains(.,'ĐĂNG NHẬP') or contains(.,'LOGIN') or contains(.,'Log in') or contains(.,'Sign in')]")).click();
+            driver.findElement(By.xpath("//input[@id='input-username']")).sendKeys("truongdao");
+            driver.findElement(By.xpath("//input[@id='input-password']")).sendKeys("Testing@12345678");
+            driver.findElement(By.xpath("//button[contains(text(),'NG NH')]")).click();
         } catch (Exception e) {
             System.out.println("Lỗi đăng nhập hoặc đã ở trong hệ thống: " + e.getMessage());
         }
