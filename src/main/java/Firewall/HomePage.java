@@ -11,7 +11,7 @@ public class HomePage {
     private WebDriverWait wait;
 
     // 1. Khai báo các locators (Thay đổi giá trị By.id/xpath cho khớp với HTML thực tế của Firewall)
-    private By menuDashboard = By.xpath("//span[contains(text(),'Đối tượng')]");
+    private By menuDashboard = By.xpath("//span[contains(text(),'i t' and contains(text(),'ng') ]");
     private By userProfileIcon = By.xpath("//span[normalize-space()='truongdao']");
 
     // 2. Constructor
