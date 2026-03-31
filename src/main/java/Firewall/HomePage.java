@@ -17,7 +17,7 @@ public class HomePage {
     // 2. Constructor
     public HomePage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(20));
     }
 
     // 3. Các hàm hành động (Actions)
