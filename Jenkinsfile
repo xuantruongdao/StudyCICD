@@ -22,25 +22,31 @@ pipeline {
             allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
 
             script {
-                def botToken = "8235786325:AAH13T9nKHIiG7F59jHLyrclTntSLkTa5Hk"
-                def chatId = "8321594462"
-                def buildStatus = currentBuild.currentResult
+                            def botToken = "8235786325:AAH13T9nKHIiG7F59jHLyrclTntSLkTa5Hk"
+                            def chatId = "8321594462"
+                            def allureLink = "${env.BUILD_URL}allure/"
 
-                // Dùng ký tự đơn giản để test kết nối trước
-                def statusIcon = (buildStatus == 'SUCCESS') ? "[OK]" : "[FAILED]"
-                def msg = "${statusIcon} KET QUA TEST FIREWALL\\nBuild: #${env.BUILD_NUMBER}\\nStatus: ${buildStatus}\\nLink: ${env.BUILD_URL}allure/"
+                            // Tạo nội dung tin nhắn trực tiếp trong PowerShell để xuống dòng chuẩn xác
+                            powershell """
+                                [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-                powershell """
-                    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-                    \$url = "https://api.telegram.org/bot${botToken}/sendMessage"
-                    \$payload = @{
-                        chat_id = "${chatId}"
-                        text = "${msg}"
-                        parse_mode = "Markdown"
-                    }
-                    Invoke-RestMethod -Uri \$url -Method Post -Body (\$payload | ConvertTo-Json) -ContentType "application/json; charset=utf-8"
-                """
-            }
+                                # Dùng dấu `n để xuống dòng trong PowerShell
+                                \$message = "✅ *BÁO CÁO TEST FIREWALL*`n" +
+                                           "----------------------------`n" +
+                                           "*Build:* #${env.BUILD_NUMBER}`n" +
+                                           "*Status:* SUCCESS`n" +
+                                           "----------------------------`n" +
+                                           "[👉 Xem Allure Report](${allureLink})"
+
+                                \$url = "https://api.telegram.org/bot${botToken}/sendMessage"
+                                \$payload = @{
+                                    chat_id = "${chatId}"
+                                    text = \$message
+                                    parse_mode = "Markdown"
+                                }
+                                Invoke-RestMethod -Uri \$url -Method Post -Body (\$payload | ConvertTo-Json) -ContentType "application/json; charset=utf-8"
+                            """
+                        }
         }
     }
 }
